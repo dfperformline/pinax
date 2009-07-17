@@ -85,8 +85,7 @@ class Task(models.Model):
         th = TaskHistory()
         th.task = self
         
-        if self.group:
-            self.group.associate(th, commit=False)
+        self.group.associate(th, commit=False)
         
         # save the simple fields
         
