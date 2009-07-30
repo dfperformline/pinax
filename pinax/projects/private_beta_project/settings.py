@@ -62,7 +62,7 @@ MEDIA_URL = '/site_media/'
 ADMIN_MEDIA_PREFIX = '/media/'
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'bk-e2zv3humar79nm=j*bwc=-ymeit(8a20whp3goq4dh71t)s'
+SECRET_KEY = ''
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -78,12 +78,13 @@ MIDDLEWARE_CLASSES = (
     'account.middleware.LocaleMiddleware',
     'django.middleware.doc.XViewMiddleware',
     'pagination.middleware.PaginationMiddleware',
+    'pinax.middleware.security.HideSensistiveFieldsMiddleware',
 )
 
 ROOT_URLCONF = 'private_beta_project.urls'
 
 TEMPLATE_DIRS = (
-    os.path.join(os.path.dirname(__file__), "templates"),
+    os.path.join(PROJECT_ROOT, "templates"),
     os.path.join(PINAX_ROOT, "templates", PINAX_THEME),
 )
 
@@ -94,12 +95,13 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.request",
     
+    "pinax.core.context_processors.contact_email",
+    "pinax.core.context_processors.site_name",
+    
     "notification.context_processors.notification",
     "announcements.context_processors.site_wide_announcements",
     "account.context_processors.openid",
     "account.context_processors.account",
-    "misc.context_processors.contact_email",
-    "misc.context_processors.site_name",
 )
 
 INSTALLED_APPS = (
@@ -109,6 +111,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.humanize',
+    'pinax.templatetags',
     
     # external
     'notification', # must be first
@@ -125,7 +128,6 @@ INSTALLED_APPS = (
     'basic_profiles',
     'staticfiles',
     'account',
-    'misc',
     'waitinglist',
     'signup_codes',
     
@@ -152,6 +154,8 @@ AUTH_PROFILE_MODULE = 'basic_profiles.Profile'
 NOTIFICATION_LANGUAGE_MODULE = 'account.Account'
 
 ACCOUNT_OPEN_SIGNUP = False
+ACCOUNT_REQUIRED_EMAIL = False
+ACCOUNT_EMAIL_VERIFICATION = False
 
 EMAIL_CONFIRMATION_DAYS = 2
 EMAIL_DEBUG = DEBUG

@@ -195,6 +195,11 @@ class Command(BaseCommand):
                 print
             sys.exit(0)
         
+        if not args:
+            # note: --help prints full path to pinax-admin
+            self.print_help("pinax-admin", "clone_project")
+            sys.exit(0)
+        
         main(options.get('pinax_root'), args[0], args[1],
             verbose = options.get('verbose')
         )
