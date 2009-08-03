@@ -70,12 +70,16 @@ def resolve_command(cmd, path=None, pathext=None):
     for _dir in path:
         f = os.path.join(_dir, cmd)
         for ext in pathext:
+            # try without extension first
+            if os.path.isfile(f):
+                return os.path.realpath(f)
+            # then including the extension
             fext = f + ext
             if os.path.isfile(fext):
-                return os.path.normpath(fext)
+                return os.path.realpath(fext)
     # last resort: just try the searched for path
     if searched_for_path:
-        cmd = os.path.join(searched_for_path, cmd)
+        cmd = os.path.join(os.path.realpath(searched_for_path), cmd)
     if not os.path.exists(cmd):
         print "ERROR: this script requires %s." % cmd
         print "Please verify it exists because it couldn't be found."
@@ -142,7 +146,7 @@ def install_base(easy_install, requirements_dir, packages):
             # get it from the PyPI
             src = '%s==%s' % (pkg, version)
         logger.notify('Installing %s %s' % (pkg, version))
-        call_subprocess([easy_install, '--quiet',
+        call_subprocess([easy_install, '--quiet', '--always-copy',
                         '--always-unzip', '--find-links', PINAX_PYPI, src],
                         filter_stdout=filter_lines, show_stdout=False)
 
@@ -157,7 +161,7 @@ def release_files_exist(release_dir, requirements_file):
         line = line.strip()
         if not line or line.startswith('#'):
             continue
-        requirement = join(release_dir, line)
+        requirement = os.path.normpath(join(release_dir, line))
         if not os.path.exists(requirement):
             result = False
             missing_requirements.append(requirement)
@@ -259,7 +263,7 @@ def after_install(options, home_dir):
             if not line or line.startswith('#'):
                 continue
             logger.notify('Installing %s' % line)
-            call_subprocess([easy_install, '--quiet', '--always-copy',
+            call_subprocess([easy_install, '--quiet',
                             '--always-unzip', '--find-links', PINAX_PYPI, line],
                             filter_stdout=filter_lines, show_stdout=False)
 
