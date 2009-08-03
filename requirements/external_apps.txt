@@ -2,7 +2,7 @@
 --requirement=libs.txt
 --find-links=http://pypi.pinaxproject.com
 
-# Already released apps
+# Already released apps without a version
 django-ajax-validation
 django-announcements
 django-avatar
