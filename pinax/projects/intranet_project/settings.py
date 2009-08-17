@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Django settings for basic pinax project.
+# Django settings for intranet project.
 
 import os.path
 import pinax
@@ -132,12 +132,14 @@ INSTALLED_APPS = (
     'uni_form',
     'django_markup',
     'attachments',
+    'filter',
     
     # internal (for now)
     'basic_profiles',
     'account',
     'signup_codes',
     'groups',
+    'topics',
     'tagging_utils',
     'threadedcomments_extras',
     #'pastebin',
@@ -180,7 +182,14 @@ ACCOUNT_EMAIL_VERIFICATION = False
 
 AUTHENTICATED_EXEMPT_URLS = [
     r"^/account/signup/$",
+    r"^/account/password_reset",
+    r"^/account/confirm_email",
 ]
+
+STATICFILES_EXTRA_MEDIA = (
+    ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
+    ('intranet_project', os.path.join(PROJECT_ROOT, 'media')),
+)
 
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.
